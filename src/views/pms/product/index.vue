@@ -87,7 +87,7 @@
         <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.goodsSn}}</template>
         </el-table-column>
-        <el-table-column label="名称" width="120" align="center">
+        <el-table-column label="名称" width="220" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="图片" width="120" align="center">

@@ -34,21 +34,21 @@
           <div class="total-frame">
             <img :src="img_home_order" class="total-icon">
             <div class="total-title">今日订单总数</div>
-            <div class="total-value">200</div>
+            <div class="total-value">{{info.totalOrdersToday}}</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="total-frame">
             <img :src="img_home_today_amount" class="total-icon">
             <div class="total-title">今日销售总额</div>
-            <div class="total-value">￥5000.00</div>
+            <div class="total-value">￥{{info.totalSalesToday}}</div>
           </div>
         </el-col>
         <el-col :span="6">
           <div class="total-frame">
             <img :src="img_home_yesterday_amount" class="total-icon">
             <div class="total-title">昨日销售总额</div>
-            <div class="total-value">￥5000.00</div>
+            <div class="total-value">￥{{info.totalSalesYesterday}}</div>
           </div>
         </el-col>
         <!--<el-col :span="6">-->
@@ -245,6 +245,9 @@
 </template>
 
 <script>
+  import {
+    getInfo
+  } from '@/api/index'
   import {str2Date} from '@/utils/date';
   import img_home_order from '@/assets/images/home_order.png';
   import img_home_today_amount from '@/assets/images/home_today_amount.png';
@@ -252,34 +255,35 @@
   const DATA_FROM_BACKEND = {
     columns: ['date', 'orderCount','orderAmount'],
     rows: [
-      {date: '2018-11-01', orderCount: 10, orderAmount: 1093},
-      {date: '2018-11-02', orderCount: 20, orderAmount: 2230},
-      {date: '2018-11-03', orderCount: 33, orderAmount: 3623},
-      {date: '2018-11-04', orderCount: 50, orderAmount: 6423},
-      {date: '2018-11-05', orderCount: 80, orderAmount: 8492},
-      {date: '2018-11-06', orderCount: 60, orderAmount: 6293},
-      {date: '2018-11-07', orderCount: 20, orderAmount: 2293},
-      {date: '2018-11-08', orderCount: 60, orderAmount: 6293},
-      {date: '2018-11-09', orderCount: 50, orderAmount: 5293},
-      {date: '2018-11-10', orderCount: 30, orderAmount: 3293},
-      {date: '2018-11-11', orderCount: 20, orderAmount: 2293},
-      {date: '2018-11-12', orderCount: 80, orderAmount: 8293},
-      {date: '2018-11-13', orderCount: 100, orderAmount: 10293},
-      {date: '2018-11-14', orderCount: 10, orderAmount: 1293},
-      {date: '2018-11-15', orderCount: 40, orderAmount: 4293}
+      {date: '2021-11-01', orderCount: 10, orderAmount: 1093},
+      {date: '2021-11-02', orderCount: 20, orderAmount: 2230},
+      {date: '2021-11-03', orderCount: 33, orderAmount: 3623},
+      {date: '2021-11-04', orderCount: 50, orderAmount: 6423},
+      {date: '2021-11-05', orderCount: 80, orderAmount: 8492},
+      {date: '2021-11-06', orderCount: 60, orderAmount: 6293},
+      {date: '2021-11-07', orderCount: 20, orderAmount: 2293},
+      {date: '2021-11-08', orderCount: 60, orderAmount: 6293},
+      {date: '2021-11-09', orderCount: 50, orderAmount: 5293},
+      {date: '2021-11-10', orderCount: 30, orderAmount: 3293},
+      {date: '2021-11-11', orderCount: 20, orderAmount: 2293},
+      {date: '2021-11-12', orderCount: 80, orderAmount: 8293},
+      {date: '2021-11-13', orderCount: 100, orderAmount: 10293},
+      {date: '2021-11-14', orderCount: 10, orderAmount: 1293},
+      {date: '2021-11-15', orderCount: 40, orderAmount: 4293}
     ]
   };
   export default {
     name: 'home',
     data() {
       return {
+        info: {totalOrdersToday: null,totalSalesToday: null,totalSalesYesterday: null},
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
             onClick(picker) {
               const end = new Date();
               let start = new Date();
-              start.setFullYear(2018);
+              start.setFullYear(2021);
               start.setMonth(10);
               start.setDate(1);
               end.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
@@ -290,7 +294,7 @@
             onClick(picker) {
               const end = new Date();
               let start = new Date();
-              start.setFullYear(2018);
+              start.setFullYear(2021);
               start.setMonth(10);
               start.setDate(1);
               end.setTime(start.getTime() + 3600 * 1000 * 24 * 30);
@@ -317,6 +321,7 @@
     },
     created(){
       this.initOrderCountDate();
+      this.getInfo();
       this.getData();
     },
     methods:{
@@ -325,12 +330,17 @@
       },
       initOrderCountDate(){
         let start = new Date();
-        start.setFullYear(2018);
+        start.setFullYear(2021);
         start.setMonth(10);
         start.setDate(1);
         const end = new Date();
         end.setTime(start.getTime() + 1000 * 60 * 60 * 24 * 7);
         this.orderCountDate=[start,end];
+      },
+      getInfo() {
+        getInfo().then(response => {
+          this.info = response.data;
+        });
       },
       getData(){
         setTimeout(() => {
